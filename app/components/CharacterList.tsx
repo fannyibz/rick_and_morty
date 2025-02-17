@@ -1,9 +1,11 @@
 'use client';
 
-import {useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import type { Character } from '../types/character';
-
+import { Card, CardContent, CardMedia, Typography, Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
+// props that the CharacterList component expects to receive
 interface CharacterListProps {
   initialCharacters: Character[];
 }
@@ -12,24 +14,53 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
   const [characters] = useState<Character[]>(initialCharacters);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <Grid 
+      container 
+      spacing={{ xs: 2, md: 3 }} 
+      columns={{ xs: 4, sm: 8, md: 12 }}
+      justifyContent="center"
+    >
       {characters.map((character, index) => (
-        <div key={character.id} className="border rounded-lg p-4">
-          <h2 className="text-xl font-bold mb-2">{character.name}</h2>
-          <Image 
-            src={character.image} 
-            alt={character.name}
-            width={300}
-            height={300}
-            className="w-full h-auto rounded-md"
-            priority={index < 3}
-          />
-          <div className="mt-2">
-            <p><strong>Location:</strong> {character.location.name}</p>
-            <p><strong>Origin:</strong> {character.origin.name}</p>
-          </div>
-        </div>
+        <Grid size={3} key={character.id}>
+          <Card sx={{ 
+            maxWidth: 300,
+            height: '100%',
+            transition: 'all 0.2s',
+            '&:hover': { 
+              transform: 'translateY(-4px)',
+              boxShadow: 3
+            }
+          }}>
+            <CardMedia sx={{ position: 'relative', paddingTop: '100%' }}>
+              <Image 
+                src={character.image} 
+                alt={character.name}
+                fill
+                sizes="(max-width: 600px) 100vw, 300px"
+                style={{ objectFit: 'cover' }}
+                priority={index < 3}
+              />
+            </CardMedia>
+            <CardContent>
+              <Typography variant="h5" component="h2" gutterBottom sx={{
+                '&:hover': { color: 'primary.main' }
+              }}>
+                {character.name}
+              </Typography>
+              <Box sx={{ mt: 1 }}>
+                <Typography variant="body1">
+                  <Typography component="span" fontWeight="medium">Location: </Typography>
+                  {character.location.name}
+                </Typography>
+                <Typography variant="body1">
+                  <Typography component="span" fontWeight="medium">Origin: </Typography>
+                  {character.origin.name}
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 } 
