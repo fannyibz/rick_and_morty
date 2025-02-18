@@ -32,7 +32,7 @@ export default function ProminentAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: 'var(--grey)' }}>
         <StyledToolbar>
-          {showBackButton ? (
+          {showBackButton && (
             <IconButton
               size="large"
               edge="start"
@@ -42,16 +42,6 @@ export default function ProminentAppBar() {
               sx={{ mr: 2, color: 'var(--blue)' }}
             >
               <ArrowBackIcon />
-            </IconButton>
-          ) : (
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
             </IconButton>
           )}
           <Typography
@@ -69,17 +59,6 @@ export default function ProminentAppBar() {
               <h1>Rick and Morty</h1>
             </Box>
           </Typography>
-          <IconButton size="large" aria-label="search" color="inherit">
-            <SearchIcon />
-          </IconButton>
-          <IconButton
-            size="large"
-            aria-label="display more actions"
-            edge="end"
-            color="inherit"
-          >
-            <MoreIcon />
-          </IconButton>
         </StyledToolbar>
       </AppBar>
     </Box>
