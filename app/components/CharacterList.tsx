@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Character } from '../types/character';
 import { 
   Box, 
@@ -8,33 +8,40 @@ import {
   Pagination 
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { useQuery } from '@apollo/client';
-import { GET_CHARACTERS } from '../graphql/queries';
 import CharacterCard from './CharacterCard';
+import { fetchCharactersByPage } from '../services/characterService';
 
 interface CharacterListProps {
   initialCharacters: Character[];
 }
 
-interface CharacterData {
-  characters: {
-    results: Character[];
-    info: {
-      pages: number;
-      next: number | null;
-    };
-  };
-}
-
 export default function CharacterList({ initialCharacters }: CharacterListProps) {
   const [page, setPage] = useState(1);
-  
-  const { loading, data } = useQuery<CharacterData>(GET_CHARACTERS, {
-    variables: { page },
-  });
+  const [loading, setLoading] = useState(false);
+  const [characters, setCharacters] = useState(initialCharacters);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const characters = page === 1 ? initialCharacters : data?.characters?.results || [];
-  const totalPages = data?.characters?.info?.pages || 1;
+  useEffect(() => {
+    if (page === 1) {
+      setCharacters(initialCharacters);
+      return;
+    }
+
+    const loadCharacters = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchCharactersByPage(page);
+        setCharacters(data.results);
+        setTotalPages(data.info.pages);
+      } catch (error) {
+        console.error('Error loading characters:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCharacters();
+  }, [page, initialCharacters]);
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
