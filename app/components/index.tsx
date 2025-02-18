@@ -11,7 +11,7 @@ interface IndexProps {
 
 export default function Index({ initialCharacters }: IndexProps) {
   return (
-    <Box sx={{ paddingTop: "64px" }}>
+    <Box>
       <Container>
         <Box
           display="flex"

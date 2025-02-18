@@ -12,6 +12,14 @@ interface CharacterData {
   };
 }
 
+interface FilterOptions {
+  name: string;
+  status: string;
+  species: string;
+  type: string;
+  gender: string;
+}
+
 export async function fetchInitialCharacters() {
   const client = getApolloClient();
   
@@ -27,13 +35,16 @@ export async function fetchInitialCharacters() {
   }
 }
 
-export async function fetchCharactersByPage(page: number) {
+export async function fetchCharactersByPage(page: number, filters: FilterOptions) {
   const client = getApolloClient();
   
   try {
     const { data } = await client.query<CharacterData>({
       query: GET_CHARACTERS,
-      variables: { page }
+      variables: {
+        page,
+        ...filters
+      }
     });
     return data.characters;
   } catch (error) {

@@ -10,6 +10,7 @@ import {
 import Grid from '@mui/material/Grid2';
 import CharacterCard from './CharacterCard';
 import { fetchCharactersByPage } from '../services/characterService';
+import CharacterFilters from './CharacterFilters';
 
 interface CharacterListProps {
   initialCharacters: Character[];
@@ -20,17 +21,19 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
   const [loading, setLoading] = useState(false);
   const [characters, setCharacters] = useState(initialCharacters);
   const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState({
+    name: '',
+    status: '',
+    species: '',
+    type: '',
+    gender: ''
+  });
 
   useEffect(() => {
-    if (page === 1) {
-      setCharacters(initialCharacters);
-      return;
-    }
-
     const loadCharacters = async () => {
       setLoading(true);
       try {
-        const data = await fetchCharactersByPage(page);
+        const data = await fetchCharactersByPage(page, filters);
         setCharacters(data.results);
         setTotalPages(data.info.pages);
       } catch (error) {
@@ -40,8 +43,21 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
       }
     };
 
-    loadCharacters();
-  }, [page, initialCharacters]);
+    if (page === 1 && !hasActiveFilters()) {
+      setCharacters(initialCharacters);
+    } else {
+      loadCharacters();
+    }
+  }, [page, filters, initialCharacters]);
+
+  const hasActiveFilters = () => {
+    return Object.values(filters).some(value => value !== '');
+  };
+
+  const handleFilterChange = (name: string, value: string) => {
+    setFilters(prev => ({ ...prev, [name]: value }));
+    setPage(1); // Reset to first page when filters change
+  };
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -50,6 +66,11 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
 
   return (
     <>
+      <CharacterFilters 
+        filters={filters}
+        onFilterChange={handleFilterChange}
+      />
+      
       <Grid 
         container 
         spacing={{ xs: 2, md: 3 }} 
