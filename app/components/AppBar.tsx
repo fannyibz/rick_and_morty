@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useRouter, usePathname } from 'next/navigation';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -22,19 +24,36 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 export default function ProminentAppBar() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const showBackButton = pathname !== '/';
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: 'var(--grey)' }}>
         <StyledToolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {showBackButton ? (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="back"
+              onClick={() => router.back()}
+              sx={{ mr: 2, color: 'var(--blue)' }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Typography
             variant="h5"
             noWrap
