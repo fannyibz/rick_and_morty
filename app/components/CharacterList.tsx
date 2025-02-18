@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid2';
 import CharacterCard from './CharacterCard';
 import { fetchCharactersByPage } from '../services/characterService';
 import CharacterFilters from './CharacterFilters';
+import React from 'react';
 
 interface CharacterListProps {
   initialCharacters: Character[];
@@ -21,6 +22,7 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
   const [loading, setLoading] = useState(false);
   const [characters, setCharacters] = useState(initialCharacters);
   const [totalPages, setTotalPages] = useState(1);
+  const isFirstRender = React.useRef(true);
   const [filters, setFilters] = useState({
     name: '',
     status: '',
@@ -28,6 +30,10 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
     type: '',
     gender: ''
   });
+
+  const hasActiveFilters = React.useCallback(() => {
+    return Object.values(filters).some(value => value !== '');
+  }, [filters]);
 
   useEffect(() => {
     const loadCharacters = async () => {
@@ -43,20 +49,17 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
       }
     };
 
-    if (page === 1 && !hasActiveFilters()) {
+    if (isFirstRender.current && page === 1 && !hasActiveFilters()) {
+      isFirstRender.current = false;
       setCharacters(initialCharacters);
     } else {
       loadCharacters();
     }
-  }, [page, filters, initialCharacters]);
-
-  const hasActiveFilters = () => {
-    return Object.values(filters).some(value => value !== '');
-  };
+  }, [page, filters, initialCharacters, hasActiveFilters]);
 
   const handleFilterChange = (name: string, value: string) => {
     setFilters(prev => ({ ...prev, [name]: value }));
-    setPage(1); // Reset to first page when filters change
+    setPage(1);
   };
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
