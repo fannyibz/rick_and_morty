@@ -15,21 +15,26 @@ import React from 'react';
 
 interface CharacterListProps {
   initialCharacters: Character[];
+  filters: {
+    name: string;
+    status: string;
+    species: string;
+    type: string;
+    gender: string;
+  };
+  onFilterChange: (name: string, value: string) => void;
 }
 
-export default function CharacterList({ initialCharacters }: CharacterListProps) {
+export default function CharacterList({ 
+  initialCharacters, 
+  filters, 
+  onFilterChange 
+}: CharacterListProps) {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [characters, setCharacters] = useState(initialCharacters);
   const [totalPages, setTotalPages] = useState(1);
   const isFirstRender = React.useRef(true);
-  const [filters, setFilters] = useState({
-    name: '',
-    status: '',
-    species: '',
-    type: '',
-    gender: ''
-  });
 
   const hasActiveFilters = React.useCallback(() => {
     return Object.values(filters).some(value => value !== '');
@@ -58,7 +63,7 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
   }, [page, filters, initialCharacters, hasActiveFilters]);
 
   const handleFilterChange = (name: string, value: string) => {
-    setFilters(prev => ({ ...prev, [name]: value }));
+    onFilterChange(name, value);
     setPage(1);
   };
 
@@ -77,7 +82,7 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
       <Grid 
         container 
         spacing={{ xs: 2, md: 3 }} 
-        columns={{ xs: 4, sm: 8, md: 12 }}
+        columns={{ xs: 9, sm: 8, md: 12 }}
         justifyContent="center"
       >
         {characters.map((character, index) => (
@@ -92,13 +97,35 @@ export default function CharacterList({ initialCharacters }: CharacterListProps)
           <CircularProgress />
         </Box>
       ) : (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6}}>
           <Pagination 
             count={totalPages} 
             page={page} 
             onChange={handlePageChange}
             color="primary"
-            size="large"
+            variant="outlined"
+            shape="rounded"
+            sx={{
+              '& .MuiPaginationItem-root': {
+                color: 'var(--blue)',
+                borderColor: 'var(--blue)',
+                '&.Mui-selected': {
+                  backgroundColor: 'var(--blue)',
+                  color: '#fff',
+                  '&:hover': {
+                    backgroundColor: 'var(--blue)',
+                    opacity: 0.8
+                  }
+                },
+                '&:hover': {
+                  backgroundColor: 'rgba(var(--blue-rgb), 0.04)'
+                }
+              },
+              '& .MuiPagination-ul': {
+                justifyContent: 'center'
+              },
+              marginBottom: 2
+            }}
           />
         </Box>
       )}

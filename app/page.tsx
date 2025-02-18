@@ -14,7 +14,12 @@ export default async function Home() {
 
     return (
       <ApolloClientProvider>
-        <main>
+        <main style={{ 
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          paddingBottom: '80px'
+        }}>
           <AppBar />
           <Index initialCharacters={initialCharacters} />
         </main>

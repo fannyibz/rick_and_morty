@@ -5,13 +5,7 @@ import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useRouter, usePathname } from 'next/navigation';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -19,31 +13,15 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
   // Override media queries injected by theme.mixins.toolbar
   '@media all': {
-    minHeight: 128,
+    minHeight: { xs: 80, md: 128 },
   },
 }));
 
 export default function ProminentAppBar() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const showBackButton = pathname !== '/';
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: 'var(--grey)' }}>
         <StyledToolbar>
-          {showBackButton && (
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="back"
-              onClick={() => router.back()}
-              sx={{ mr: 2, color: 'var(--blue)' }}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-          )}
           <Typography
             variant="h5"
             noWrap
@@ -52,10 +30,15 @@ export default function ProminentAppBar() {
               flexGrow: 1, 
               alignSelf: 'flex-end',
               textAlign: 'center',
-              color: 'var(--blue)'
+              color: 'var(--blue)',
+              fontSize: { xs: '1.2rem', md: '2rem' }
             }}
           >
-            <Box  sx={{ color: 'var(--blue)', mt: 18, mb: 14 }}>
+            <Box sx={{ 
+              color: 'var(--blue)',
+              mt: { xs: 2, md: 18 }, 
+              mb: { xs: 2, md: 14 } 
+            }}>
               <h1>Rick and Morty</h1>
             </Box>
           </Typography>

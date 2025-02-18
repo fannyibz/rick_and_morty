@@ -26,8 +26,23 @@ export default function CharacterCard({ character, index }: { character: Charact
             priority={index < 3}
           />
         </CardMedia>
-        <CardContent>
-          <Typography variant="h5" component="h2" gutterBottom sx={{ color: 'var(--blue)' }}>
+      
+        <CardContent sx={{ 
+          padding: { xs: 0, sm: 2 },
+          '&:last-child': {
+            paddingBottom: { xs: 0.5, sm: 2 }
+          },
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 64
+        }}>
+          <Typography variant="h5" component="h2" sx={{ 
+            color: 'var(--blue)',
+            fontSize: { xs: '1rem', md: '1.2rem' },
+            margin: 0,
+            textAlign: 'center'
+            }}>
             {character.name}
           </Typography>
         </CardContent>

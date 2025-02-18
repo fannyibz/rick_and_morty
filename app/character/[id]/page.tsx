@@ -2,6 +2,7 @@ import { getApolloClient } from '../../lib/apollo-client';
 import { gql } from '@apollo/client';
 import CharacterDetails from '../../components/CharacterDetails';
 import AppBar from '../../components/AppBar';
+import Footer from '@/app/components/Footer';
 
 const GET_CHARACTER = gql`
   query GetCharacter($id: ID!) {
@@ -26,7 +27,13 @@ const GET_CHARACTER = gql`
   }
 `;
 
-export default async function CharacterPage({ params }: { params: { id: string } }) {
+interface CharacterPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function CharacterPage({ params }: CharacterPageProps) {
   const client = getApolloClient();
   
   try {
@@ -36,10 +43,16 @@ export default async function CharacterPage({ params }: { params: { id: string }
     });
 
     return (
-      <>
+      <main style={{ 
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        paddingBottom: '80px'
+      }}>
         <AppBar />
         <CharacterDetails character={data.character} />
-      </>
+        <Footer />
+      </main>
     );
   } catch (error) {
     console.error('Error fetching character:', error);
